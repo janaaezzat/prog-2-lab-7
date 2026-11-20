@@ -1,5 +1,7 @@
+package main;
 import javax.swing.SwingUtilities;
 import gui.MainFrame;
+public class Main {
 public static void main(String[] args) {
     SwingUtilities.invokeLater(() -> {  //SwingUtilities.invokeLater(...)  This tells Swing to create and show our GUI on
                                         //  the Swing Event Dispatch Thread (EDT), which is the thread Swing uses for GUI work.
@@ -8,4 +10,5 @@ public static void main(String[] args) {
         frame.setVisible(true);
         });
 
+    }
 }
