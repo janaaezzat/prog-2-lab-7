@@ -273,10 +273,9 @@ public class AddEmployeePanel extends JPanel {
             JOptionPane.showMessageDialog(this,"An employee with this ID already exists.","Duplicate ID",JOptionPane.ERROR_MESSAGE);
             return;
         }
-
-        JOptionPane.showMessageDialog(this,"Employee added successfully!","Success",JOptionPane.INFORMATION_MESSAGE);
-
-        clearForm();
+        //oveerriding it 34an ne5aly el display awda7
+        JOptionPane.showMessageDialog(this,"Employee added successfully!\n" +"Employee Name: " + employee.getName() + "\n" +"Employee ID: " + employee.getId() + "\n" +"Total Salary: " + employee.calculateSalary(),"Success",JOptionPane.INFORMATION_MESSAGE);
+        clearForm();//y clear ba3d ma added successfully
 
     } catch (NumberFormatException e) {
 
