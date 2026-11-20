@@ -1,10 +1,11 @@
 package gui;
 
 import javax.swing.JFrame;
+import manager.EmployeeManager;
 
 public class MainFrame extends JFrame {
 
-    public MainFrame() {
+    public MainFrame(EmployeeManager employeeManager) {
 
         setTitle("Employee Management System");
 
@@ -14,7 +15,7 @@ public class MainFrame extends JFrame {
 
         setLocationRelativeTo(null);
 
-        setContentPane(new AddEmployeePanel());
+        setContentPane(new AddEmployeePanel(employeeManager));
 
     }
 }

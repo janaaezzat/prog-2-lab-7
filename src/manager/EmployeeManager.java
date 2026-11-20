@@ -11,9 +11,15 @@ public class EmployeeManager {
     }
 
     //can accept all types of employees
-    public void addEmployee(Employee employee) {
-        employees.add(employee);
+   public boolean addEmployee(Employee employee) {
+
+    if (findEmployeeById(employee.getId()) != null) {//protecting from duplicates
+        return false;
     }
+
+    employees.add(employee);
+    return true;
+}
 
 
     public ArrayList<Employee> getAllEmployees() {
