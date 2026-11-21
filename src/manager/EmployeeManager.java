@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class EmployeeManager {
 
-    private ArrayList<Employee> employees; //polymerphism
+    private ArrayList<Employee> employees; //polymorphism
 
     public EmployeeManager() {
         employees = new ArrayList<>();
-        //creates an empty list when creating an employeeManagger object
+        //creates an empty list when creating an employeeManager object
     }
     // add employee
     //can accept all types of employees

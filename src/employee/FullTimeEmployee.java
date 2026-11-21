@@ -22,4 +22,10 @@ public class FullTimeEmployee extends Employee {
     public double calculateSalary() {
         return basicSalary + bonus;
     }
+
+    @Override
+    public String fileString(){
+        return "FullTimeEmployee"+","+getId()+","+getName()+","+getAge()+","+getDepartment()+","+getPosition()+","+basicSalary+","+bonus+"\n";
+        //id,name,age,department,position are private so their getters are used
+    }
 }

@@ -38,4 +38,7 @@ public abstract class Employee {
         return position;
     }
     public abstract double calculateSalary();
+    public abstract String fileString();
+    //each employee can return its string file format 7asab noo3o w so that the class can be open for extension
+    //instead of handling different types of employees inside save and load methods
 }

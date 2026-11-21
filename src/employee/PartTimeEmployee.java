@@ -22,4 +22,10 @@ public class PartTimeEmployee extends Employee {
     public double calculateSalary() {
         return hourlyRate * hoursWorked;
     }
+
+    @Override
+    public String fileString(){
+        return "PartTimeEmployee"+","+getId()+","+getName()+","+getAge()+","+getDepartment()+","+getPosition()+","+hourlyRate+","+hoursWorked+"\n";
+        //id,name,age,department,position are private so their getters are used
+    }
 }
