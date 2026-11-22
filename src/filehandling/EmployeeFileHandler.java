@@ -4,6 +4,7 @@ import java.util.List;
 import employee.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.io.IOException;
 
 public class EmployeeFileHandler {
     public void save(ArrayList<Employee> employees){
@@ -14,19 +15,24 @@ public class EmployeeFileHandler {
          for(Employee emp:employees){
             employeeData.append(emp.fileString());
             }
-        Files.writeString(path,employeeData.toString()); //convert stringBuilder dt to String dt
-        //should i handle IOException??
+        try{ //it is required to handle file errors without terminating the program so i used exceptions
+            Files.writeString(path,employeeData.toString()); //convert stringBuilder dt to String dt
         }
+        catch(IOException e){
+            System.out.println("Error writing to file: "+e.getMessage());
+        }
+    }
 
 
     public ArrayList<Employee> load(){   
     Path path = Path.of("employees.txt");
     ArrayList<Employee> employees = new ArrayList<>(); //empty initially
 
+    try{
+        
     if (!Files.exists(path)||Files.size(path)==0) { 
         return employees; //if file is empty or doesn't exist,an empty array is returned
     }
-
     List<String> lines = Files.readAllLines(path); //list of all lines in the file
     for(String l:lines){
         if (l.equals("")) {
@@ -47,7 +53,11 @@ public class EmployeeFileHandler {
 
         }
 
+    }}
+    catch(IOException e){
+        System.out.println("Error reading from file: "+e.getMessage());
     }
+   
 
 
     return employees;

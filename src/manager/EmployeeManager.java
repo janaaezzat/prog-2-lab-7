@@ -1,5 +1,6 @@
 package manager;
 import employee.*;
+import filehandling.EmployeeFileHandler;
 import java.util.ArrayList;
 
 public class EmployeeManager {
@@ -112,7 +113,15 @@ public class EmployeeManager {
         }
     }
 
-    return null;}
+    return null;
+    }
+
+    void loadEmployees(){ //called by client once the program starts
+        EmployeeFileHandler fileHandler = new EmployeeFileHandler();
+        employees = fileHandler.load(); //load employees from file to list
+    }
+
+
 
 }
 
