@@ -2,6 +2,7 @@ package main;
 import javax.swing.SwingUtilities;
 import gui.MainFrame;
 import manager.EmployeeManager;
+import manager.DepartmentManager;
 
 public class Main {
 public static void main(String[] args) {
