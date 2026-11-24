@@ -116,9 +116,20 @@ public class EmployeeManager {
     return null;
     }
 
-    void loadEmployees(){ //called by client once the program starts
+     public void saveEmployees() {
+
         EmployeeFileHandler fileHandler = new EmployeeFileHandler();
-        employees = fileHandler.load(); //load employees from file to list
+        fileHandler.save(employees);
+    }
+
+    // Load employees
+    public void loadEmployees() {
+
+        EmployeeFileHandler fileHandler = new EmployeeFileHandler();
+        employees = fileHandler.load();
+        if (employees == null) {
+            employees = new ArrayList<>();
+        }
     }
 
 
