@@ -1,6 +1,7 @@
 package manager;
 import department.*;
 import filehandling.DepartmentFileHandler;
+import java.util.ArrayList;
 
 public class DepartmentManager{
     private ArrayList<Department> departments;
