@@ -2,7 +2,7 @@ package gui;
 
 import javax.swing.JFrame;
 import manager.EmployeeManager;
-impoort manager.DepartmentManager;
+import manager.DepartmentManager;
 
 public class MainFrame extends JFrame {
 
