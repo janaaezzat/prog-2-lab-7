@@ -29,7 +29,7 @@ public class DepartmentManager{
         return true;
     }
 
-    public ArrayList<Department> getDepartments() {
+    public ArrayList<Department> getAllDepartments() {
         return new ArrayList<>(departments);
     }
     public Department findDepartmentByID(int id){
