@@ -66,7 +66,7 @@ public class DepartmentManager{
         }
         return false;
     }
-    
+
     public boolean isInUse(String departmentName){//check weather a department has employees or not
         if(employeeManager==null||departmentName==null)
             return false;
@@ -76,7 +76,7 @@ public class DepartmentManager{
         }
         return false;
     }
-    
+
     public boolean deleteDepartment(int ID){
         Department department=findDepartmentByID(ID);
         if(department==null)
@@ -87,14 +87,32 @@ public class DepartmentManager{
         return true;
     }
 
-    void loadDepartments(){ //called by client once the program starts
+    public void loadDepartments(){ //called by client once the program starts
         DepartmentFileHandler fileHandler = new DepartmentFileHandler();
         ArrayList<Department> loadedDepartments = fileHandler.load(); //load departments from file to list
         if(loadedDepartments!=null)
             departments=loadedDepartments;
     }
-    public void saveDepartmentsToFile(){
+    public void saveDepartments(){
         DepartmentFileHandler fileHandler=new DepartmentFileHandler();
         fileHandler.save(departments);
+    }
+    // Inside DepartmentManager.java (or called right after loadDepartments() in Main.java)
+    public void seedDefaultDepartmentsIfEmpty() {
+        if (!departments.isEmpty()) {
+            return;
+        }
+        String[] defaults = {
+                "IT",
+                "Human Resources",
+                "Finance",
+                "Marketing",
+                "Sales"
+        };
+        int nextId = 1;
+        for (String name : defaults) {
+            departments.add(new Department(nextId++, name));
+        }
+        saveDepartments();
     }
 }
