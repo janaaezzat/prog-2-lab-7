@@ -15,32 +15,25 @@ public class MainFrame extends JFrame {
     private final CardLayout cardLayout;
     private final JPanel mainPanel;
     private final JPanel topBar;
-    private static final int LOGIN_WIDTH = 500;
-    private static final int LOGIN_HEIGHT = 100;
+
+    private final AddEmployeePanel addEmployeePanel;
+    private final ViewEmployeesPanel viewEmployeesPanel;
+    private final DepartmentPanel departmentPanel;
+
+    private static final int LOGIN_WIDTH = 480;
+    private static final int LOGIN_HEIGHT = 320;
 
     private static final int MAIN_WIDTH = 1000;
     private static final int MAIN_HEIGHT = 650;
 
-    private ViewEmployeesPanel viewEmployeesPanel; //reference will be needed later so we store it as a field
-
-    private void applyWindowSize(int width, int height, boolean centerOnScreen) {
-        setSize(width, height);
-        if (centerOnScreen) {
-            setLocationRelativeTo(null);
-        }
-        revalidate();
-        repaint();
-    }
-
     public MainFrame(EmployeeManager employeeManager, DepartmentManager departmentManager) {
-
         this.employeeManager = employeeManager;
         this.departmentManager = departmentManager;
 
         // Connect the two managers
         departmentManager.setEmployeeManager(employeeManager);
-        setTitle("Employee Management System");
 
+        setTitle("Employee Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
@@ -56,31 +49,43 @@ public class MainFrame extends JFrame {
 
         // CardLayout handles screen navigation
         cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);//mainPanel is the area inside the mainFrame where the different screens are displayed and switched between using the cardLayout
-        
+        mainPanel = new JPanel(cardLayout);
+
+        // Initialize application screens and keep references for refreshing
+        LoginPanel loginPanel = new LoginPanel(new AuthenticationService(), this);
+        DashboardPanel dashboardPanel = new DashboardPanel(this);
+        addEmployeePanel = new AddEmployeePanel(employeeManager);
+        viewEmployeesPanel = new ViewEmployeesPanel(employeeManager);
+        departmentPanel = new DepartmentPanel(departmentManager);
+
         // Add application screens(we define the screens we're going to naviagte between)
-        //Each screen/panel is registered inside mainPanel with a name->show method takes main panel and the registered name of the panel to be shown as arguments  
-        mainPanel.add(new LoginPanel(new AuthenticationService(), this), "LOGIN");
-        mainPanel.add(new DashboardPanel(this), "DASHBOARD");
-        mainPanel.add(new AddEmployeePanel(employeeManager), "ADD_EMPLOYEE");
-        mainPanel.add(new ViewEmployeesPanel(employeeManager), "VIEW_EMPLOYEES");
-        mainPanel.add(new DepartmentPanel(departmentManager), "DEPARTMENTS");
+        //Each screen/panel is registered inside mainPanel with a name->show method takes main panel and the registered name of the panel to be shown as arguments 
+        mainPanel.add(loginPanel, "LOGIN");
+        mainPanel.add(dashboardPanel, "DASHBOARD");
+        mainPanel.add(addEmployeePanel, "ADD_EMPLOYEE");
+        mainPanel.add(viewEmployeesPanel, "VIEW_EMPLOYEES");
+        mainPanel.add(departmentPanel, "DEPARTMENTS");
 
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-        navigateToLogin(); //login is the fisrt screen shown when the program starts
+        navigateToLogin();  //login is the fisrt screen shown when the program starts
     }
 
-    // Login screen
+    private void applyWindowSize(int width, int height, boolean centerOnScreen) {
+        setSize(width, height);
+        if (centerOnScreen) {
+            setLocationRelativeTo(null);
+        }
+        revalidate();
+        repaint();
+    }
+
     // Login screen (smaller window)
     public void navigateToLogin() {
         topBar.setVisible(false);
         applyWindowSize(LOGIN_WIDTH, LOGIN_HEIGHT, true);
         cardLayout.show(mainPanel, "LOGIN");
-        //LOGIN is the name assigned to the login panel when it was added to the mainPanel
-        //main panel heya el passed to "show" method NOT loginPanel nafasaha
-        //because CardLayout manages the entire collection of panels inside mainPanel
     }
 
     // Dashboard (larger window)
@@ -88,38 +93,49 @@ public class MainFrame extends JFrame {
         topBar.setVisible(false);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, true);
         cardLayout.show(mainPanel, "DASHBOARD");
+        //LOGIN is the name assigned to the login panel when it was added to the mainPanel
+        //main panel heya el passed to "show" method NOT loginPanel nafasaha
+        //because CardLayout manages the entire collection of panels inside mainPanel
     }
 
-    // Add employee screen
+    // Add employee screen (refreshes departments dropdown before showing)
     public void navigateToAddEmployee() {
+
         topBar.setVisible(true);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, false);
         cardLayout.show(mainPanel, "ADD_EMPLOYEE");
     }
 
-    // View employees screen
+    // View employees screen (refreshes table and department filter before showing)
     public void navigateToViewEmployees() {
+
         viewEmployeesPanel.refreshTable();
         topBar.setVisible(true);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, false);
         cardLayout.show(mainPanel, "VIEW_EMPLOYEES");
     }
-    
-    // Department management screen
+
+    // Department management screen (refreshes departments table before showing)
     public void navigateToDepartments() {
+        departmentPanel.refreshTable();
         topBar.setVisible(true);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, false);
         cardLayout.show(mainPanel, "DEPARTMENTS");
     }
+
     // Save data and exit
     public void exitProgram() {
-
         try {
             employeeManager.saveEmployees();
             departmentManager.saveDepartments();
-
         } catch (RuntimeException e) {
-            JOptionPane.showMessageDialog(this, "An error occurred while saving application data:\n" + e.getMessage(), "Save Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                    this,
+                    "An error occurred while saving application data:\n"
+                            + e.getMessage(),
+                    "Save Error",
+                    JOptionPane.ERROR_MESSAGE
+            );
         }
 
         System.exit(0);
