@@ -12,8 +12,10 @@ public class Main {
         DepartmentManager departmentManager=new DepartmentManager();
 
         // Load saved data before opening the application
+        
         employeeManager.loadEmployees();
         departmentManager.loadDepartments();
+        departmentManager.seedDefaultDepartmentsIfEmpty();
 
         // Open GUI on Swing Event Dispatch Thread
         SwingUtilities.invokeLater(() -> {
