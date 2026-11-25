@@ -2,7 +2,6 @@ package manager;
 import department.*;
 import employee.Employee;
 import filehandling.DepartmentFileHandler;
-
 import java.util.ArrayList;
 
 
@@ -89,10 +88,8 @@ public class DepartmentManager{
 
     public void loadDepartments(){ //called by client once the program starts
         DepartmentFileHandler fileHandler = new DepartmentFileHandler();
-        ArrayList<Department> loadedDepartments = fileHandler.load(); //load departments from file to list
-        if(loadedDepartments!=null)
-            departments=loadedDepartments;
-    }
+        departments = fileHandler.load(); //load departments from file to list
+       }
     public void saveDepartments(){
         DepartmentFileHandler fileHandler=new DepartmentFileHandler();
         fileHandler.save(departments);

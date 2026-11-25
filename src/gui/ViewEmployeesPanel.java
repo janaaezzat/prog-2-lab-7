@@ -271,4 +271,9 @@ private void updateEmployee() {
 
     dialog.setVisible(true);
 }
+    public void refreshTable() {
+        searchField.setText("");
+        departmentBox.setSelectedIndex(0);
+        loadEmployees(employeeManager.getAllEmployees());
+    }  
 }

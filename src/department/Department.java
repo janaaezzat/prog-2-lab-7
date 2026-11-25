@@ -24,6 +24,9 @@ public class Department {
     public String toString() {
         return name;
     }// 3shan yezhar 3la el system k string
+    public String fileString() {
+        return id+","+name+"\n"; //string to be written in text file
+    }
 
 
 

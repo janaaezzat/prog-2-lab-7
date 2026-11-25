@@ -54,22 +54,20 @@ public class MainFrame extends JFrame {
 
         // CardLayout handles screen navigation
         cardLayout = new CardLayout();
-        mainPanel = new JPanel(cardLayout);
-
-        // Add application screens
+        mainPanel = new JPanel(cardLayout);//mainPanel is the area inside the mainFrame where the different screens are displayed and switched between using the cardLayout
+        
+        // Add application screens(we define the screens we're going to naviagte between)
+        //Each screen/panel is registered inside mainPanel with a name->show method takes main panel and the registered name of the panel to be shown as arguments  
         mainPanel.add(new LoginPanel(new AuthenticationService(), this), "LOGIN");
         mainPanel.add(new DashboardPanel(this), "DASHBOARD");
-
         mainPanel.add(new AddEmployeePanel(employeeManager), "ADD_EMPLOYEE");
-
         mainPanel.add(new ViewEmployeesPanel(employeeManager), "VIEW_EMPLOYEES");
-
         mainPanel.add(new DepartmentPanel(departmentManager), "DEPARTMENTS");
 
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-        navigateToLogin();
+        navigateToLogin(); //login is the fisrt screen shown when the program starts
     }
 
     // Login screen
@@ -78,6 +76,9 @@ public class MainFrame extends JFrame {
         topBar.setVisible(false);
         applyWindowSize(LOGIN_WIDTH, LOGIN_HEIGHT, true);
         cardLayout.show(mainPanel, "LOGIN");
+        //LOGIN is the name assigned to the login panel when it was added to the mainPanel
+        //main panel heya el passed to "show" method NOT loginPanel nafasaha
+        //because CardLayout manages the entire collection of panels inside mainPanel
     }
 
     // Dashboard (larger window)
@@ -96,11 +97,12 @@ public class MainFrame extends JFrame {
 
     // View employees screen
     public void navigateToViewEmployees() {
+        viewEmployeesPanel.refreshTable();
         topBar.setVisible(true);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, false);
         cardLayout.show(mainPanel, "VIEW_EMPLOYEES");
     }
-
+    
     // Department management screen
     public void navigateToDepartments() {
         topBar.setVisible(true);
