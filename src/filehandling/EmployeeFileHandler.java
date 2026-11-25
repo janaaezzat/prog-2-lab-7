@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class EmployeeFileHandler {
     public void save(ArrayList<Employee> employees){
-         Path path = Path.of("employees.txt"); //path is an object implementing "Path" interface,it is used to store file location
+         Path path = Path.of("src","filehandling", "employees.txt"); //path is an object implementing "Path" interface,it is used to store file location
          //full-time employee format in file: Type,ID,Name,Age,Department,Position,BasicSalary,Bonus
          //part-time emolyee format in file: Type,ID,Name,Age,Department,Position,HourlyRate,HoursWorked
          StringBuilder employeeData=new StringBuilder();
@@ -25,7 +25,7 @@ public class EmployeeFileHandler {
 
 
     public ArrayList<Employee> load(){   
-        Path path = Path.of("employees.txt");
+        Path path = Path.of("src","filehandling", "employees.txt");
         ArrayList<Employee> employees = new ArrayList<>(); //empty initially
 
         try{
@@ -48,7 +48,7 @@ public class EmployeeFileHandler {
 
         }
         else if(word[0].equals("PartTimeEmployee")){
-            employees.add(new PartTimeEmployee(Integer.parseInt(word[1]),word[2],Integer.parseInt(word[3]),word[4],word[5],Double.parseDouble(word[6]),Integer.parseInt(word[7])));
+            employees.add(new PartTimeEmployee(Integer.parseInt(word[1]),word[2],Integer.parseInt(word[3]),word[4],word[5],Double.parseDouble(word[6]),Double.parseDouble(word[7])));
 
         }
         }}

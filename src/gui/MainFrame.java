@@ -21,6 +21,8 @@ public class MainFrame extends JFrame {
     private static final int MAIN_WIDTH = 1000;
     private static final int MAIN_HEIGHT = 650;
 
+    private ViewEmployeesPanel viewEmployeesPanel; //reference will be needed later so we store it as a field
+
     private void applyWindowSize(int width, int height, boolean centerOnScreen) {
         setSize(width, height);
         if (centerOnScreen) {

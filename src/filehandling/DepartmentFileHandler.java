@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class DepartmentFileHandler{ 
     public void save(ArrayList<Department> departments){
-        Path path = Path.of("departments.txt"); //path is an object implementing "Path" interface,it is used to store file location
+        Path path = Path.of("src","filehandling", "departments.txt"); //path is an object implementing "Path" interface,it is used to store file location
          //department format in text file: id,name
          StringBuilder departmentData=new StringBuilder();
          for(Department dep:departments){
@@ -23,7 +23,7 @@ public class DepartmentFileHandler{
         }
 
     public ArrayList<Department> load(){
-        Path path = Path.of("departments.txt");
+        Path path = Path.of("src","filehandling", "departments.txt");
         ArrayList<Department> departments = new ArrayList<>(); //empty initially
 
         try{
