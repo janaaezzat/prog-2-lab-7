@@ -25,6 +25,7 @@ public class DepartmentManager{
             return false;
         }
         departments.add(department);
+        saveDepartments();//added
         return true;
     }
 
@@ -60,6 +61,7 @@ public class DepartmentManager{
                 if(existName!=null&&existName.getId()!= updated.getId())
                     return false;
                 departments.set(i,updated);
+                saveDepartments();//added
                 return true;
             }
         }
@@ -83,6 +85,7 @@ public class DepartmentManager{
         if(isInUse(department.getName()))
             return false; //cannot delete a department with employees in it
         departments.remove(department);
+        saveDepartments();
         return true;
     }
 
