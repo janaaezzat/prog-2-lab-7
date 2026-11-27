@@ -270,7 +270,7 @@ public class ViewEmployeesPanel extends JPanel {
                 new UpdateEmployeeDialog(
                         SwingUtilities.getWindowAncestor(this),
                         oldEmployee,
-                        employeeManager,
+                        employeeManager, departmentManager,
                         () -> searchEmployees()
                 );
 
