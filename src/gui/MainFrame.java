@@ -54,12 +54,11 @@ public class MainFrame extends JFrame {
         // Initialize application screens and keep references for refreshing
         LoginPanel loginPanel = new LoginPanel(new AuthenticationService(), this);
         DashboardPanel dashboardPanel = new DashboardPanel(this);
-        addEmployeePanel = new AddEmployeePanel(employeeManager);
-        viewEmployeesPanel = new ViewEmployeesPanel(employeeManager);
+        addEmployeePanel = new AddEmployeePanel(employeeManager,departmentManager);
+        viewEmployeesPanel = new ViewEmployeesPanel(employeeManager,departmentManager);
         departmentPanel = new DepartmentPanel(departmentManager);
 
-        // Add application screens(we define the screens we're going to naviagte between)
-        //Each screen/panel is registered inside mainPanel with a name->show method takes main panel and the registered name of the panel to be shown as arguments 
+        // Add application screens
         mainPanel.add(loginPanel, "LOGIN");
         mainPanel.add(dashboardPanel, "DASHBOARD");
         mainPanel.add(addEmployeePanel, "ADD_EMPLOYEE");
@@ -69,7 +68,7 @@ public class MainFrame extends JFrame {
         add(topBar, BorderLayout.NORTH);
         add(mainPanel, BorderLayout.CENTER);
 
-        navigateToLogin();  //login is the fisrt screen shown when the program starts
+        navigateToLogin();
     }
 
     private void applyWindowSize(int width, int height, boolean centerOnScreen) {
@@ -93,28 +92,23 @@ public class MainFrame extends JFrame {
         topBar.setVisible(false);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, true);
         cardLayout.show(mainPanel, "DASHBOARD");
-        //LOGIN is the name assigned to the login panel when it was added to the mainPanel
-        //main panel heya el passed to "show" method NOT loginPanel nafasaha
-        //because CardLayout manages the entire collection of panels inside mainPanel
     }
 
     // Add employee screen (refreshes departments dropdown before showing)
-    public void navigateToAddEmployee() {
-
+    public void navigateToAddEmployee() {//updated
+        addEmployeePanel.reloadDepartments();
         topBar.setVisible(true);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, false);
         cardLayout.show(mainPanel, "ADD_EMPLOYEE");
     }
 
-    // View employees screen (refreshes table and department filter before showing)
-    public void navigateToViewEmployees() {
-
+    public void navigateToViewEmployees() {//updated
+        viewEmployeesPanel.reloadDepartments();
         viewEmployeesPanel.refreshTable();
         topBar.setVisible(true);
         applyWindowSize(MAIN_WIDTH, MAIN_HEIGHT, false);
         cardLayout.show(mainPanel, "VIEW_EMPLOYEES");
     }
-
     // Department management screen (refreshes departments table before showing)
     public void navigateToDepartments() {
         departmentPanel.refreshTable();
