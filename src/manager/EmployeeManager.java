@@ -24,6 +24,7 @@ public class EmployeeManager {
     }
 
     employees.add(employee);
+    saveEmployees();//added
     return true;
 }
 
@@ -60,6 +61,7 @@ public class EmployeeManager {
             if (employees.get(i).getId() == updatedEmployee.getId()) {
 
                 employees.set(i, updatedEmployee);//set(index, object) replaces the element at a particular position
+                saveEmployees();//added
                 return true;
             }
         }
@@ -75,6 +77,7 @@ public class EmployeeManager {
             if (employees.get(i).getId() == id) {
 
                 employees.remove(i);//Remove the employee at that index
+                saveEmployees();//added
                 return true;
             }
         }
