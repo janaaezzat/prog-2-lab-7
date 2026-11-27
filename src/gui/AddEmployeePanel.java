@@ -4,21 +4,24 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import department.Department;
+import manager.DepartmentManager; // added this
 import manager.EmployeeManager;
 import employee.*;
 
 public class AddEmployeePanel extends JPanel {
-    // el 7agat deh private 34an el class dah bas el yet7akem feha 
+    // el 7agat deh private 34an el class dah bas el yet7akem feha
     // Employee information fields
     private JTextField idField; //hena declared as class variables w bnrga3 ta7t ne3mlohom
-                                //initialize fields in the constructor or methods, so they can be accessed throughout the class.
-                                //34an han7taghom fl methods tanyeen zay el action listeners w el validation and buttons w keda
+    //initialize fields in the constructor or methods, so they can be accessed throughout the class.
+    //34an han7taghom fl methods tanyeen zay el action listeners w el validation and buttons w keda
     private JTextField nameField;
     private JSpinner ageSpinner;
     private JTextField positionField;
 
     // Dropdowns
-    private JComboBox<String> departmentBox;
+    private JComboBox<Department> departmentBox;
     private JComboBox<String> employeeTypeBox;
 
     // Buttons
@@ -34,10 +37,12 @@ public class AddEmployeePanel extends JPanel {
     private JTextField hourlyRateField;
     private JTextField hoursWorkedField;
     private EmployeeManager employeeManager;// keda el main creates EmployeeManager w passes same object ll main frame then to addemppanel fa te2dar add tezawed mn 5elal manager
-    // the constructor 
-    public AddEmployeePanel(EmployeeManager employeeManager) {
+    private DepartmentManager departmentManager; // added this
+    // the constructor
+    public AddEmployeePanel(EmployeeManager employeeManager, DepartmentManager departmentManager) { // added this
         this.employeeManager = employeeManager;
-    // border layout leh 5 positions north, south, east, west, center
+        this.departmentManager = departmentManager; // added this
+        // border layout leh 5 positions north, south, east, west, center
         // Main panel layout
         setLayout(new BorderLayout(15, 15));// 15, 15 is the horizontal and vertical gap between components
 
@@ -57,18 +62,19 @@ public class AddEmployeePanel extends JPanel {
 
         // Place the sections inside the main panel
         //add hena inherited method form main class Jpanel bt7ot a component in another component w el position elly 3ayzen n7ot feha
-        //me4 far2a this.add or add bas 
+        //me4 far2a this.add or add bas
         add(headerPanel, BorderLayout.NORTH);
         add(centerPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
+        reloadDepartments(); // added this
         // Display the correct salary fields initially
         updateSalaryFields();
 
     }
-// el concept createHeaderPanel creates a Jpanel w adds title lable returns panel constructor puts it in north in this case w han3ml keda fl ba2y
+    // el concept createHeaderPanel creates a Jpanel w adds title lable returns panel constructor puts it in north in this case w han3ml keda fl ba2y
     private JPanel createHeaderPanel() {
-// el header panel dah 3shan el title btrga3 Jpanel w private brdo 34an el class dah bas el yet7akem feha 
+// el header panel dah 3shan el title btrga3 Jpanel w private brdo 34an el class dah bas el yet7akem feha
         JPanel panel = new JPanel(new BorderLayout()); //hn3ml panel w nrgh3a
 
         JLabel titleLabel = new JLabel("Add New Employee");
@@ -95,15 +101,7 @@ public class AddEmployeePanel extends JPanel {
         positionField = new JTextField();
 
         // Create department dropdown
-        departmentBox = new JComboBox<>(
-                new String[] {
-                        "IT",
-                        "Human Resources",
-                        "Finance",
-                        "Marketing",
-                        "Sales"
-                }
-        );
+        departmentBox = new JComboBox<>(); // added this
 
         // Create employee type dropdown
         employeeTypeBox = new JComboBox<>(
@@ -138,6 +136,13 @@ public class AddEmployeePanel extends JPanel {
         return panel;
     }
 
+    public void reloadDepartments() { // added this
+        departmentBox.removeAllItems(); // added this
+        for (Department d : departmentManager.getAllDepartments()) { // added this
+            departmentBox.addItem(d); // added this
+        } // added this
+    } // added this
+
     private JPanel createButtonPanel() {
         // flowlayout by7othom from left to right in a row
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -157,129 +162,136 @@ public class AddEmployeePanel extends JPanel {
         return panel;
     }
     private JPanel createSalaryPanel() {
-    JPanel panel = new JPanel(new GridLayout(0, 2, 12, 12));
-    panel.setBorder(new TitledBorder("Salary Information"));
+        JPanel panel = new JPanel(new GridLayout(0, 2, 12, 12));
+        panel.setBorder(new TitledBorder("Salary Information"));
 
-    return panel;
+        return panel;
     }
 
     private void clearForm() {
 
-    idField.setText("");
-    nameField.setText("");
-    ageSpinner.setValue(25);
-    positionField.setText("");
+        idField.setText("");
+        nameField.setText("");
+        ageSpinner.setValue(25);
+        positionField.setText("");
 
-    departmentBox.setSelectedIndex(0); //deh ll dropdown boxes set it tbos l awel index el default 
-    employeeTypeBox.setSelectedIndex(0);
+        if (departmentBox.getItemCount() > 0) { // added this
+            departmentBox.setSelectedIndex(0); //deh ll dropdown boxes set it tbos l awel index el default
+        } // added this
+        employeeTypeBox.setSelectedIndex(0);
 
-    updateSalaryFields(); // Reset salary fields to default state
+        updateSalaryFields(); // Reset salary fields to default state
 
     }
 
     private void updateSalaryFields() {
-    // Remove the previous salary components
-    //34an lw knt katba 7agat 3la asas full time then changes mn el dropdown l part time
-    salaryPanel.removeAll();
+        // Remove the previous salary components
+        //34an lw knt katba 7agat 3la asas full time then changes mn el dropdown l part time
+        salaryPanel.removeAll();
 
-    // Check which employee type is selected
-    if (employeeTypeBox.getSelectedItem().equals("Full-Time")) {
-
-        basicSalaryField = new JTextField();
-        bonusField = new JTextField();
-
-        salaryPanel.add(new JLabel("Basic Salary:"));
-        salaryPanel.add(basicSalaryField);
-
-        salaryPanel.add(new JLabel("Bonus:"));
-        salaryPanel.add(bonusField);
-
-    } else {
-
-        hourlyRateField = new JTextField();
-        hoursWorkedField = new JTextField();
-
-        salaryPanel.add(new JLabel("Hourly Rate:"));
-        salaryPanel.add(hourlyRateField);
-
-        salaryPanel.add(new JLabel("Hours Worked:"));
-        salaryPanel.add(hoursWorkedField);
-    }
-
-    // Refresh the panel after changing its components
-    salaryPanel.revalidate(); //bt2ool l swing en feh 7agat et8ayart fa recalculate el layout
-    salaryPanel.repaint();// bt2ool l swing redraw el panel so the visual changes appear
-    }
-    private void addEmployee() {
-
-    try {
-        // Read common employee information
-        //parse int hena deh bta5od el mn JTextField el hwa byb2a string w t7awelo int
-        //w lw el 7aga me4 int ya3ny da5lt hello masalan hat3ml NumberFormatException hence why we are using el try and catch 
-        int id = Integer.parseInt(idField.getText());
-        String name = nameField.getText();
-        int age = (int) ageSpinner.getValue(); //getvalue returns object fa hn3mlha casting 
-        String department = departmentBox.getSelectedItem().toString();
-        String position = positionField.getText();
-
-        // Validate common information
-        if (name.isEmpty() || position.isEmpty()) {
-            // el method bta5ot parent and message el awal this refers ll current addemp obj wl message el 3ayzeen nezhrha and can be overriden tab3an
-            //ennna ne3ml message title w fourth arg are constants (info msg aw error msg aw warning msg question msg or plain msg) 7asab ana 3izah azher eh  w bet7otlha icon
-            // joptionpane deh class , showmessage deh static method wl info wl kalam dah predefined coonstants
-            JOptionPane.showMessageDialog(this,"Name and position cannot be empty.","Input Error",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        // Create the correct employee type
-        Employee employee;
-
+        // Check which employee type is selected
         if (employeeTypeBox.getSelectedItem().equals("Full-Time")) {
 
-            double basicSalary = Double.parseDouble(
-                basicSalaryField.getText()
-            );
+            basicSalaryField = new JTextField();
+            bonusField = new JTextField();
 
-            double bonus = Double.parseDouble(
-                bonusField.getText()
-            );
+            salaryPanel.add(new JLabel("Basic Salary:"));
+            salaryPanel.add(basicSalaryField);
 
-            if (basicSalary < 0 || bonus < 0) {
-                JOptionPane.showMessageDialog(this,"Salary and bonus cannot be negative.","Input Error",JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            employee = new FullTimeEmployee(id, name, age, department, position,basicSalary, bonus);
+            salaryPanel.add(new JLabel("Bonus:"));
+            salaryPanel.add(bonusField);
 
         } else {
 
-            double hourlyRate = Double.parseDouble(
-                hourlyRateField.getText()
-            );
+            hourlyRateField = new JTextField();
+            hoursWorkedField = new JTextField();
 
-            double hoursWorked = Double.parseDouble(
-                hoursWorkedField.getText()
-            );
+            salaryPanel.add(new JLabel("Hourly Rate:"));
+            salaryPanel.add(hourlyRateField);
 
-            if (hourlyRate < 0 || hoursWorked < 0) {
-                JOptionPane.showMessageDialog(this,"Hourly rate and hours worked cannot be negative.","Input Error",JOptionPane.ERROR_MESSAGE);
+            salaryPanel.add(new JLabel("Hours Worked:"));
+            salaryPanel.add(hoursWorkedField);
+        }
+
+        // Refresh the panel after changing its components
+        salaryPanel.revalidate(); //bt2ool l swing en feh 7agat et8ayart fa recalculate el layout
+        salaryPanel.repaint();// bt2ool l swing redraw el panel so the visual changes appear
+    }
+    private void addEmployee() {
+
+        try {
+            // Read common employee information
+            //parse int hena deh bta5od el mn JTextField el hwa byb2a string w t7awelo int
+            //w lw el 7aga me4 int ya3ny da5lt hello masalan hat3ml NumberFormatException hence why we are using el try and catch
+            int id = Integer.parseInt(idField.getText());
+            String name = nameField.getText();
+            int age = (int) ageSpinner.getValue(); //getvalue returns object fa hn3mlha casting
+            Object selectedDept = departmentBox.getSelectedItem(); // added this
+            if (selectedDept == null) { // added this
+                JOptionPane.showMessageDialog(this, "No department available.", "Input Error", JOptionPane.ERROR_MESSAGE); // added this
+                return; // added this
+            } // added this
+            String department = selectedDept.toString(); // added this
+            String position = positionField.getText();
+
+            // Validate common information
+            if (name.isEmpty() || position.isEmpty()) {
+                // el method bta5ot parent and message el awal this refers ll current addemp obj wl message el 3ayzeen nezhrha and can be overriden tab3an
+                //ennna ne3ml message title w fourth arg are constants (info msg aw error msg aw warning msg question msg or plain msg) 7asab ana 3izah azher eh  w bet7otlha icon
+                // joptionpane deh class , showmessage deh static method wl info wl kalam dah predefined coonstants
+                JOptionPane.showMessageDialog(this,"Name and position cannot be empty.","Input Error",JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            employee = new PartTimeEmployee(id, name, age, department, position,hourlyRate, hoursWorked);
+            // Create the correct employee type
+            Employee employee;
+
+            if (employeeTypeBox.getSelectedItem().equals("Full-Time")) {
+
+                double basicSalary = Double.parseDouble(
+                        basicSalaryField.getText()
+                );
+
+                double bonus = Double.parseDouble(
+                        bonusField.getText()
+                );
+
+                if (basicSalary < 0 || bonus < 0) {
+                    JOptionPane.showMessageDialog(this,"Salary and bonus cannot be negative.","Input Error",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                employee = new FullTimeEmployee(id, name, age, department, position,basicSalary, bonus);
+
+            } else {
+
+                double hourlyRate = Double.parseDouble(
+                        hourlyRateField.getText()
+                );
+
+                double hoursWorked = Double.parseDouble(
+                        hoursWorkedField.getText()
+                );
+
+                if (hourlyRate < 0 || hoursWorked < 0) {
+                    JOptionPane.showMessageDialog(this,"Hourly rate and hours worked cannot be negative.","Input Error",JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                employee = new PartTimeEmployee(id, name, age, department, position,hourlyRate, hoursWorked);
+            }
+
+            if (!employeeManager.addEmployee(employee)) {
+                JOptionPane.showMessageDialog(this,"An employee with this ID already exists.","Duplicate ID",JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            //oveerriding it 34an ne5aly el display awda7
+            JOptionPane.showMessageDialog(this,"Employee added successfully!\n" +"Employee Name: " + employee.getName() + "\n" +"Employee ID: " + employee.getId() + "\n" +"Total Salary: " + employee.calculateSalary(),"Success",JOptionPane.INFORMATION_MESSAGE);
+            clearForm();//y clear ba3d ma added successfully
+
+        } catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(this,"Please enter valid numeric values in the ID and salary fields.","Input Error",JOptionPane.ERROR_MESSAGE);
         }
-
-        if (!employeeManager.addEmployee(employee)) {
-            JOptionPane.showMessageDialog(this,"An employee with this ID already exists.","Duplicate ID",JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        //oveerriding it 34an ne5aly el display awda7
-        JOptionPane.showMessageDialog(this,"Employee added successfully!\n" +"Employee Name: " + employee.getName() + "\n" +"Employee ID: " + employee.getId() + "\n" +"Total Salary: " + employee.calculateSalary(),"Success",JOptionPane.INFORMATION_MESSAGE);
-        clearForm();//y clear ba3d ma added successfully
-
-    } catch (NumberFormatException e) {
-
-        JOptionPane.showMessageDialog(this,"Please enter valid numeric values in the ID and salary fields.","Input Error",JOptionPane.ERROR_MESSAGE);
     }
-}
 }
