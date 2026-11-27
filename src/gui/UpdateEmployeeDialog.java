@@ -1,8 +1,9 @@
-
 package gui;
 import javax.swing.*;
 import java.awt.*;
+import department.Department; // added this
 import employee.*;
+import manager.DepartmentManager; // added this
 import manager.EmployeeManager;
 // JDialog me4 JPanel because we want a separate dialog window to appear when the user clicks Update Employee
 //JPanel is a container inside another window (frame)
@@ -10,10 +11,11 @@ import manager.EmployeeManager;
 public class UpdateEmployeeDialog extends JDialog {
 
     private EmployeeManager employeeManager;
+    private DepartmentManager departmentManager; // added this
     private Employee oldEmployee;
     //onUpdated	Stores an action to execute after a successful update
     //() -> searchEmployees() deh fi el update fi viewEmployeePanel ,When someone executes this action, call searchEmployees() 
-   //we are passing an action to UpdateEmployeeDialog, not executing searchEmployees() immediately
+    //we are passing an action to UpdateEmployeeDialog, not executing searchEmployees() immediately
     private Runnable onUpdated;//Runnable represents an action that can be executed later
 
     private JTextField idField;
@@ -32,19 +34,21 @@ public class UpdateEmployeeDialog extends JDialog {
             Window owner, // the main window that owns el dilog which is MainFrame
             Employee employee,// employee selected by user
             EmployeeManager employeeManager,
+            DepartmentManager departmentManager, // added this
             Runnable onUpdated) {
-         //el parent class constructor (JDialog)
-         //APPLICATION_MODAL means the user must close this dialog before interacting with the other application windows
+        //el parent class constructor (JDialog)
+        //APPLICATION_MODAL means the user must close this dialog before interacting with the other application windows
         super(owner, "Update Employee", ModalityType.APPLICATION_MODAL);
 
         this.oldEmployee = employee;
         this.employeeManager = employeeManager;
+        this.departmentManager = departmentManager; // added this
         this.onUpdated = onUpdated;
 
         setLayout(new BorderLayout(10, 10));
-      //0: Number of rows is calculated automatically
-      //2: Two columns First column contains labels,Second column contains input fields
-      //The last two values represent horizontal and vertical gaps
+        //0: Number of rows is calculated automatically
+        //2: Two columns First column contains labels,Second column contains input fields
+        //The last two values represent horizontal and vertical gaps
         JPanel formPanel = new JPanel(new GridLayout(0, 2, 10, 10));
         //Adds empty space around the form
         //This prevents the form components from touching the edges
@@ -61,14 +65,12 @@ public class UpdateEmployeeDialog extends JDialog {
         ageField = new JTextField(String.valueOf(employee.getAge()));
         positionField = new JTextField(employee.getPosition());
 
-        departmentBox = new JComboBox<>(new String[]{
-                "IT",
-                "HR",
-                "Human Resources",
-                "Finance",
-                "Marketing",
-                "Sales"
-        });
+        departmentBox = new JComboBox<>(); // added this
+        if (departmentManager != null) { // added this
+            for (Department dept : departmentManager.getAllDepartments()) { // added this
+                departmentBox.addItem(dept.getName()); // added this
+            } // added this
+        } // added this
 
         // Preserve the existing department if it isn't in the options
         String currentDepartment = employee.getDepartment();
@@ -155,14 +157,14 @@ public class UpdateEmployeeDialog extends JDialog {
     private void saveChanges() {
 
         try {
-           //getText() retrieves the text entered by the user
+            //getText() retrieves the text entered by the user
             String name = nameField.getText().trim();
             String ageText = ageField.getText().trim();
             String position = positionField.getText().trim();
 
             String department =
                     (String) departmentBox.getSelectedItem();
-               //from string to int
+            //from string to int
             int age = Integer.parseInt(ageText);
 
             if (name.isEmpty()
